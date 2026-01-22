@@ -1,0 +1,214 @@
+{
+  "bank_statement": {
+    "document_metadata": {
+      "type": "bank_statement",
+      "institution": "Unknown",
+      "account_holder": "JAMES C. MORRISON",
+      "period_end": "2023-11-09",
+      "currency": "USD"
+    },
+    "summary": {
+      "opening_balance": 69.96,
+      "closing_balance": 586.71,
+      "total_deposits": 1876.02,
+      "total_withdrawals": 1320.02
+    },
+    "transactions": [
+      {
+        "date": "2023-10-02",
+        "description": "Wal-Mart",
+        "category_hint": "Shopping",
+        "type": "debit",
+        "amount": 4.23,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-03",
+        "description": "Preauthorized Credit",
+        "category_hint": "Direct Deposit",
+        "type": "credit",
+        "amount": 763.01,
+        "is_recurring": true
+      },
+      {
+        "date": "2023-10-04",
+        "description": "Players Sports Bar and Grill",
+        "category_hint": "Dining",
+        "type": "debit",
+        "amount": 11.68,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-05",
+        "description": "Check 1234",
+        "category_hint": "Check",
+        "type": "debit",
+        "amount": 9.98,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-05",
+        "description": "Kwan Court",
+        "category_hint": "Shopping",
+        "type": "debit",
+        "amount": 25.5,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-08",
+        "description": "Pos Purchase",
+        "category_hint": "Shopping",
+        "type": "debit",
+        "amount": 59.08,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-12",
+        "description": "Check 1236",
+        "category_hint": "Check",
+        "type": "debit",
+        "amount": 69.0,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-14",
+        "description": "Check 1237",
+        "category_hint": "Check",
+        "type": "debit",
+        "amount": 180.63,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-14",
+        "description": "Pos Purchase",
+        "category_hint": "Shopping",
+        "type": "debit",
+        "amount": 18.96,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-16",
+        "description": "Preauthorized Credit",
+        "category_hint": "Direct Deposit",
+        "type": "credit",
+        "amount": 763.01,
+        "is_recurring": true
+      },
+      {
+        "date": "2023-10-22",
+        "description": "Atm Withdrawal",
+        "category_hint": "ATM Withdrawal",
+        "type": "debit",
+        "amount": 140.0,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-28",
+        "description": "Check 1238",
+        "category_hint": "Check",
+        "type": "debit",
+        "amount": 91.06,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-30",
+        "description": "Check 1239",
+        "category_hint": "Check",
+        "type": "debit",
+        "amount": 451.2,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-30",
+        "description": "Check 1246",
+        "category_hint": "Check",
+        "type": "debit",
+        "amount": 37.07,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-30",
+        "description": "Dillons",
+        "category_hint": "Shopping",
+        "type": "debit",
+        "amount": 18.67,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-31",
+        "description": "Check 1247",
+        "category_hint": "Check",
+        "type": "debit",
+        "amount": 100.0,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-31",
+        "description": "Check 1248",
+        "category_hint": "Check",
+        "type": "debit",
+        "amount": 78.24,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-10-31",
+        "description": "Preauthorized Credit",
+        "category_hint": "Direct Deposit",
+        "type": "credit",
+        "amount": 350.0,
+        "is_recurring": true
+      },
+      {
+        "date": "2023-11-02",
+        "description": "Check 1249",
+        "category_hint": "Check",
+        "type": "debit",
+        "amount": 52.23,
+        "is_recurring": false
+      },
+      {
+        "date": "2023-11-09",
+        "description": "Interest Credit",
+        "category_hint": "Interest",
+        "type": "credit",
+        "amount": 0.26,
+        "is_recurring": true
+      },
+      {
+        "date": "2023-11-09",
+        "description": "Service Charge",
+        "category_hint": "Fees",
+        "type": "debit",
+        "amount": 12.0,
+        "is_recurring": false
+      }
+    ]
+  },
+  "receipt": {
+    "merchant": "East Repair Inc.",
+    "date": "2019-11-02",
+    "total_amount": 154.06,
+    "currency": "USD",
+    "tax_amount": 9.06,
+    "items": [
+      {
+        "description": "Front and rear brake cables",
+        "quantity": 1,
+        "unit_price": 100.0,
+        "total_price": 100.0
+      },
+      {
+        "description": "New set of pedal arms",
+        "quantity": 2,
+        "unit_price": 15.0,
+        "total_price": 30.0
+      },
+      {
+        "description": "Labor 3hrs",
+        "quantity": 3,
+        "unit_price": 5.0,
+        "total_price": 15.0
+      }
+    ]
+  }
+}
