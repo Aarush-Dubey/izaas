@@ -1,13 +1,14 @@
 from splitwise import Splitwise
-CONSUMER_KEY = "mXO5tSLPpWkCXUo1IX3aGaCzi8qO9dSHC6D1jlOK"
-CONSUMER_SECRET = "cXLRsCEgXI0d15CSNkRimgWdRhKGwkgCORMMeyNj"
-sObj = Splitwise(consumer_key=CONSUMER_KEY, consumer_secret=CONSUMER_SECRET, api_key="VbRTLeFeibMAemgWLphNnpd5UkjDnMnGPBDAvNki ")
-url, secret = sObj.getAuthorizeURL()
-current = sObj.getCurrentUser()
-expenses = sObj.getExpenses(limit=20) 
-            
-synced_count = 0
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+# Load .env located in the backend directory
+env_path = Path(__file__).resolve().parent / '.env'
+load_dotenv(dotenv_path=env_path)
+CONSUMER_KEY = os.getenv("SPLITWISE_CONSUMER_KEY")
+CONSUMER_SECRET = os.getenv("SPLITWISE_CONSUMER_SECRET")
+print(CONSUMER_KEY, CONSUMER_SECRET)
 
-for exp in expenses:
-    print(exp.getId(), exp.getDescription(), exp.getCost())
-print(url, secret, current)
+# sObj = Splitwise(consumer_key=CONSUMER_KEY, consumer_secret=CONSUMER_SECRET)
+# url, secret = sObj.getAuthorizeURL()
+# print(url, secret)

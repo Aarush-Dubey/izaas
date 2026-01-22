@@ -31,7 +31,8 @@ class Transaction(models.Model):
 class SplitwiseLink(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='splitwise_link')
-    api_key = models.CharField(max_length=200, help_text="User's API Key for Splitwise")
+    oauth_token = models.CharField(max_length=255, help_text="OAuth Access Token")
+    oauth_token_secret = models.CharField(max_length=255, help_text="OAuth Access Token Secret")
 
 class Ledger(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

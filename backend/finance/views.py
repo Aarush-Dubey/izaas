@@ -17,54 +17,93 @@ class GoogleLogin(SocialLoginView):
     callback_url = "http://127.0.0.1:8000/accounts/google/login/callback/"
     client_class = OAuth2Client
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
 class SplitwiseViewSet(viewsets.ViewSet):
-    @action(detail=False, methods=['post'])
-    def connect(self, request):
-        user_id = request.data.get('user_id')
-        api_key = request.data.get('api_key')
+    """
+    Splitwise OAuth 1.0a Authorization Flow + Sync
+    """
+    @action(detail=False, methods=['post', 'get'])
+    def authorize(self, request):
+        """
+        Step 1: Get Authorize URL
+        Frontend calls this to get the Splitwise Auth URL to redirect the user to.
+        """
+        import os
+        from splitwiz import Splitwise
         
-        if not user_id or not api_key:
-             return Response({"error": "Missing user_id or api_key"}, status=status.HTTP_400_BAD_REQUEST)
-
         try:
-            user = User.objects.get(id=user_id)
-            link, created = SplitwiseLink.objects.update_or_create(
-                user=user,
-                defaults={'api_key': api_key}
+            # Initialize Client
+            sObj = Splitwise(
+                consumer_key=os.getenv("SPLITWISE_CONSUMER_KEY"),
+                consumer_secret=os.getenv("SPLITWISE_CONSUMER_SECRET")
             )
-            return Response({"status": "connected", "created": created})
+            
+            # Get Request Token and Redirect URL
+            url, secret = sObj.getAuthorizeURL()
+            
+            # Save secret in session for the callback step
+            # Note: For production use a proper cache/db key if session is flaky, 
+            # but usually cookie-session works if user is authenticated or browser maintains cookies.
+            request.session['splitwise_oauth_secret'] = secret
+            request.session.save()
+            
+            return Response({"url": url})
+            
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(detail=False, methods=['post'])
-    def sync(self, request):
-        user_id = request.data.get('user_id')
-        if not user_id:
-             return Response({"error": "Missing user_id"}, status=status.HTTP_400_BAD_REQUEST)
+    def callback(self, request):
+        """
+        Step 2: Exchange Tokens and Sync
+        Frontend receives 'oauth_token' and 'oauth_verifier' from Splitwise redirect.
+        It sends them here to finalize auth and trigger sync.
+        """
+        oauth_token = request.data.get('oauth_token')
+        oauth_verifier = request.data.get('oauth_verifier')
+        
+        # Verify user is logged in (if needed) - using request.user
+        if not request.user.is_authenticated:
+             return Response({"error": "User must be authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Retrieve secret from session
+        oauth_token_secret = request.session.get('splitwise_oauth_secret')
+        
+        if not oauth_token or not oauth_verifier or not oauth_token_secret:
+             return Response({"error": "Missing oauth tokens or session expired"}, status=status.HTTP_400_BAD_REQUEST)
+
+        import os
+        from splitwiz import Splitwise
         
         try:
-            user = User.objects.get(id=user_id)
-            service = SplitwiseService(user)
+            sObj = Splitwise(
+                consumer_key=os.getenv("SPLITWISE_CONSUMER_KEY"),
+                consumer_secret=os.getenv("SPLITWISE_CONSUMER_SECRET")
+            )
+            
+            # Exchange for Access Token
+            access_token = sObj.getAccessToken(oauth_token, oauth_token_secret, oauth_verifier)
+            
+            # Save Authorization to DB
+            SplitwiseLink.objects.update_or_create(
+                user=request.user,
+                defaults={
+                    'oauth_token': access_token['oauth_token'],
+                    'oauth_token_secret': access_token['oauth_token_secret']
+                }
+            )
+            
+            # Trigger Sync
+            service = SplitwiseService(request.user)
             result = service.sync_expenses()
-            return Response(result)
-        except User.DoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            
+            return Response({
+                "status": "connected_and_synced", 
+                "sync_result": result
+            })
+            
+        except Exception as e:
+            return Response({"error": f"Auth failed: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-
-class TransactionViewSet(viewsets.ModelViewSet):
-    queryset = Transaction.objects.all()
-    serializer_class = TransactionSerializer
-
-class LedgerViewSet(viewsets.ModelViewSet):
-    queryset = Ledger.objects.all()
-    serializer_class = LedgerSerializer
 
 class DocumentViewSet(viewsets.ModelViewSet):
     queryset = Document.objects.all()
@@ -84,42 +123,12 @@ class DocumentViewSet(viewsets.ModelViewSet):
             instance.is_processed = True
             instance.save()
 
-class ChatView(APIView):
-    def post(self, request):
-        user_message = request.data.get('message', '').lower()
-        
-        response_data = {
-            "response": "I'm not sure how to help with that yet.",
-            "ui_action": None
-        }
+class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Returns only transactions belonging to the authenticated user.
+    """
+    serializer_class = TransactionSerializer
 
-        if 'spending' in user_message or 'entertainment' in user_message:
-            response_data['response'] = "It looks like you had 3 large subscriptions renewed at once. See the breakdown."
-            response_data['ui_action'] = {
-                "type": "render",
-                "component": "BarChart",
-                "data": {
-                    "labels": ["Netflix", "Hulu", "Spotify"],
-                    "values": [15, 12, 10]
-                },
-                "props": {
-                    "title": "Subscription Breakdown"
-                }
-            }
-        elif 'transaction' in user_message or 'list' in user_message:
-            response_data['response'] = "Here are your recent transactions."
-            response_data['ui_action'] = {
-                "type": "render",
-                "component": "TransactionTable",
-                "data": [
-                    {"id": 1, "desc": "Costco", "amount": 200},
-                    {"id": 2, "desc": "Uber", "amount": 45}
-                ],
-                "props": {
-                     "sortable": True
-                }
-            }
-        else:
-             response_data['response'] = "I can help you analyze your spending or track transactions. Try asking 'Why is my receiving high?'"
-
-        return Response(response_data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        # Assuming request.user is a Finance User instance
+        return Transaction.objects.filter(payer=self.request.user)

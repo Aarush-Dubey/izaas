@@ -9,7 +9,16 @@ class SplitwiseService:
         self.user = user
         try:
             self.link = user.splitwise_link
-            self.client = Splitwise(consumer_key=self.link.api_key, consumer_secret="") 
+            import os
+            self.client = Splitwise(
+                consumer_key=os.getenv("SPLITWISE_CONSUMER_KEY"),
+                consumer_secret=os.getenv("SPLITWISE_CONSUMER_SECRET")
+            )
+            # Authenticate with stored access token
+            self.client.setAccessToken({
+                'oauth_token': self.link.oauth_token,
+                'oauth_token_secret': self.link.oauth_token_secret
+            })
         except SplitwiseLink.DoesNotExist:
             self.client = None
 
