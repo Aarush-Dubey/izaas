@@ -24,23 +24,23 @@
       },
       {
         "date": "2023-10-03",
-        "description": "Preauthorized Credit",
-        "category_hint": "Direct Deposit",
+        "description": "PREAUTHORIZED CREDIT PAYROLL",
+        "category_hint": "Income",
         "type": "credit",
         "amount": 763.01,
         "is_recurring": true
       },
       {
         "date": "2023-10-04",
-        "description": "Players Sports Bar and Grill",
-        "category_hint": "Dining",
+        "description": "PLAYERS SPORTS BAR AND GRILL",
+        "category_hint": "Food and Beverage",
         "type": "debit",
-        "amount": 11.68,
+        "amount": 817.06,
         "is_recurring": false
       },
       {
         "date": "2023-10-05",
-        "description": "Check 1234",
+        "description": "CHECK 1234",
         "category_hint": "Check",
         "type": "debit",
         "amount": 9.98,
@@ -48,7 +48,7 @@
       },
       {
         "date": "2023-10-05",
-        "description": "Kwan Court",
+        "description": "KWAN COURT",
         "category_hint": "Shopping",
         "type": "debit",
         "amount": 25.5,
@@ -56,7 +56,7 @@
       },
       {
         "date": "2023-10-08",
-        "description": "Pos Purchase",
+        "description": "POS PURCHASE",
         "category_hint": "Shopping",
         "type": "debit",
         "amount": 59.08,
@@ -64,7 +64,7 @@
       },
       {
         "date": "2023-10-12",
-        "description": "Check 1236",
+        "description": "CHECK 1236",
         "category_hint": "Check",
         "type": "debit",
         "amount": 69.0,
@@ -72,7 +72,7 @@
       },
       {
         "date": "2023-10-14",
-        "description": "Check 1237",
+        "description": "CHECK 1237",
         "category_hint": "Check",
         "type": "debit",
         "amount": 180.63,
@@ -80,7 +80,7 @@
       },
       {
         "date": "2023-10-14",
-        "description": "Pos Purchase",
+        "description": "POS PURCHASE",
         "category_hint": "Shopping",
         "type": "debit",
         "amount": 18.96,
@@ -88,15 +88,15 @@
       },
       {
         "date": "2023-10-16",
-        "description": "Preauthorized Credit",
-        "category_hint": "Direct Deposit",
+        "description": "PREAUTHORIZED CREDIT US TREASURY",
+        "category_hint": "Income",
         "type": "credit",
         "amount": 763.01,
         "is_recurring": true
       },
       {
         "date": "2023-10-22",
-        "description": "Atm Withdrawal",
+        "description": "ATM WITHDRAWAL",
         "category_hint": "ATM Withdrawal",
         "type": "debit",
         "amount": 140.0,
@@ -104,7 +104,7 @@
       },
       {
         "date": "2023-10-28",
-        "description": "Check 1238",
+        "description": "CHECK 1238",
         "category_hint": "Check",
         "type": "debit",
         "amount": 91.06,
@@ -112,7 +112,7 @@
       },
       {
         "date": "2023-10-30",
-        "description": "Check 1239",
+        "description": "CHECK 1239",
         "category_hint": "Check",
         "type": "debit",
         "amount": 451.2,
@@ -120,7 +120,7 @@
       },
       {
         "date": "2023-10-30",
-        "description": "Check 1246",
+        "description": "CHECK 1246",
         "category_hint": "Check",
         "type": "debit",
         "amount": 37.07,
@@ -128,7 +128,7 @@
       },
       {
         "date": "2023-10-30",
-        "description": "Dillons",
+        "description": "DILLONS",
         "category_hint": "Shopping",
         "type": "debit",
         "amount": 18.67,
@@ -136,7 +136,7 @@
       },
       {
         "date": "2023-10-31",
-        "description": "Check 1247",
+        "description": "CHECK 1247",
         "category_hint": "Check",
         "type": "debit",
         "amount": 100.0,
@@ -144,7 +144,7 @@
       },
       {
         "date": "2023-10-31",
-        "description": "Check 1248",
+        "description": "CHECK 1248",
         "category_hint": "Check",
         "type": "debit",
         "amount": 78.24,
@@ -152,15 +152,15 @@
       },
       {
         "date": "2023-10-31",
-        "description": "Preauthorized Credit",
-        "category_hint": "Direct Deposit",
+        "description": "PREAUTHORIZED CREDIT DEPOSIT TERMINAL",
+        "category_hint": "Income",
         "type": "credit",
         "amount": 350.0,
-        "is_recurring": true
+        "is_recurring": false
       },
       {
         "date": "2023-11-02",
-        "description": "Check 1249",
+        "description": "CHECK 1249",
         "category_hint": "Check",
         "type": "debit",
         "amount": 52.23,
@@ -168,15 +168,15 @@
       },
       {
         "date": "2023-11-09",
-        "description": "Interest Credit",
+        "description": "INTEREST CREDIT",
         "category_hint": "Interest",
         "type": "credit",
         "amount": 0.26,
-        "is_recurring": true
+        "is_recurring": false
       },
       {
         "date": "2023-11-09",
-        "description": "Service Charge",
+        "description": "SERVICE CHARGE",
         "category_hint": "Fees",
         "type": "debit",
         "amount": 12.0,

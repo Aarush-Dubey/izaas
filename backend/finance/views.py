@@ -10,6 +10,8 @@ import random
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from django.shortcuts import render, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 from dj_rest_auth.registration.views import SocialLoginView
 
 class GoogleLogin(SocialLoginView):
@@ -123,3 +125,10 @@ class ChatView(APIView):
              response_data['response'] = "I can help you analyze your spending or track transactions. Try asking 'Why is my receiving high?'"
 
         return Response(response_data, status=status.HTTP_200_OK)
+
+@csrf_exempt
+def dashboard_view(request):
+    """
+    Serves the AI-Native Canvas Dashboard (Django Template)
+    """
+    return render(request, 'finance/dashboard.html')

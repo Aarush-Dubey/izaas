@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import UserViewSet, CategoryViewSet, TransactionViewSet, LedgerViewSet, ChatView, DocumentViewSet, SplitwiseViewSet, GoogleLogin
+from .views import UserViewSet, CategoryViewSet, TransactionViewSet, LedgerViewSet, ChatView, DocumentViewSet, SplitwiseViewSet, GoogleLogin, dashboard_view
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
