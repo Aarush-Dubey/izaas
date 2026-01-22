@@ -3,7 +3,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { User, Settings, LogOut } from "lucide-react";
 
-export default function ProfileDropdown() {
+interface ProfileDropdownProps {
+    user?: any;
+}
+
+export default function ProfileDropdown({ user }: ProfileDropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -19,6 +23,15 @@ export default function ProfileDropdown() {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem("royal_pilot_profile");
+        window.location.reload();
+    };
+
+    const displayName = user?.name || "Guest Pilot";
+    const displayHandle = user?.upi || "guest@uplink";
+    const initials = displayName.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase();
 
     const menuItemStyle = {
         width: "100%",
@@ -57,7 +70,7 @@ export default function ProfileDropdown() {
                 onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--accent-emerald)"; e.currentTarget.style.color = "white"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border-active)"; e.currentTarget.style.color = "var(--text-muted)"; }}
             >
-                <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", fontWeight: "bold" }}>JD</span>
+                <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", fontWeight: "bold" }}>{initials}</span>
                 {/* Status Dot */}
                 <span style={{
                     position: "absolute",
@@ -88,8 +101,8 @@ export default function ProfileDropdown() {
                 }}>
                     {/* Header */}
                     <div style={{ padding: "1rem", borderBottom: "1px solid rgba(39, 39, 42, 0.5)" }}>
-                        <div style={{ fontFamily: "var(--font-sans)", fontWeight: 600, color: "white", fontSize: "0.875rem" }}>John Doe</div>
-                        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>john@okicici</div>
+                        <div style={{ fontFamily: "var(--font-sans)", fontWeight: 600, color: "white", fontSize: "0.875rem" }}>{displayName}</div>
+                        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>{displayHandle}</div>
                     </div>
 
                     {/* Menu Items */}
@@ -115,6 +128,7 @@ export default function ProfileDropdown() {
                         <div style={{ height: "1px", background: "var(--border-stealth)", margin: "0.25rem 0.5rem" }}></div>
 
                         <button
+                            onClick={handleLogout}
                             style={{ ...menuItemStyle, color: "#f87171" }} // Red-400 equivalent
                             onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(248, 113, 113, 0.1)"; }}
                             onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { C1Chat, ThemeProvider } from "@thesysai/genui-sdk";
 import Onboarding from "@/components/Onboarding";
 import Header from "@/components/Header";
@@ -52,14 +52,31 @@ const stealthTheme = {
 export default function Home() {
   const [dashboardReady, setDashboardReady] = useState(false);
   const [userData, setUserData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const storedProfile = localStorage.getItem("royal_pilot_profile");
+    if (storedProfile) {
+      setUserData(JSON.parse(storedProfile));
+      setDashboardReady(true);
+    }
+    setIsLoading(false);
+  }, []);
+
+  const handleOnboardingComplete = (data: any) => {
+    localStorage.setItem("royal_pilot_profile", JSON.stringify(data));
+    setUserData(data);
+    setDashboardReady(true);
+  };
+
+  if (isLoading) {
+    return <div className="stealth-container"><div className="grid-pattern"></div></div>; // Simple loading state
+  }
 
   if (!dashboardReady) {
     return (
       <Onboarding
-        onComplete={(data) => {
-          setUserData(data);
-          setDashboardReady(true);
-        }}
+        onComplete={handleOnboardingComplete}
       />
     );
   }
@@ -77,6 +94,7 @@ export default function Home() {
         <Header
           onNewSession={() => window.location.reload()}
           onNavigate={(view: string) => console.log("Navigate to", view)}
+          user={userData}
         />
         <ThemeProvider theme={stealthTheme as any}>
           <C1Chat

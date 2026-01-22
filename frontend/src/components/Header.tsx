@@ -7,9 +7,10 @@ import ProfileDropdown from "./ProfileDropdown";
 interface HeaderProps {
     onNewSession: () => void;
     onNavigate: (view: string) => void;
+    user?: any;
 }
 
-export default function Header({ onNewSession, onNavigate }: HeaderProps) {
+export default function Header({ onNewSession, onNavigate, user }: HeaderProps) {
     return (
         <header
             style={{
@@ -52,7 +53,7 @@ export default function Header({ onNewSession, onNavigate }: HeaderProps) {
             </div>
 
             <div style={{ pointerEvents: "auto" }}>
-                <ProfileDropdown />
+                <ProfileDropdown user={user} />
             </div>
         </header>
     );
