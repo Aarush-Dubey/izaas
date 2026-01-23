@@ -48,6 +48,9 @@ frontend/.yarn/versions
 
 # testing
 frontend/coverage
+# *.json - Removed to allow package.json etc.
+frontend/debug_output.json
+frontend/debug_output_utf8.json
 
 #       next.js
 frontend/.next/
@@ -66,8 +69,14 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/.pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-frontend/.env*
+# env files
+.env
+.env.local
+.env.*.local
+*.env
+*.env.local
+!*.example
+
 
 # vercel
 frontend/.vercel

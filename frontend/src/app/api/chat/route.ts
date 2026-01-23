@@ -34,7 +34,13 @@ import analysisSummary from "@/data/user-1/analysis.json";
 
 export async function POST(req: NextRequest) {
     try {
-        const { prompt, threadId, responseId } = await req.json();
+        const { prompt, threadId, responseId, context } = await req.json();
+
+        // 1. Construct the System Prompt
+        let systemMessage = SYSTEM_PROMPT;
+        if (context) {
+            systemMessage += `\n\nHIDDEN CONTEXT (User's Splitwise Data):\n${context}\n\nUse this data to answer questions about expenses, balances, and history.`;
+        }
 
         // Assemble the context messages
         const messages = [
@@ -64,7 +70,13 @@ export async function POST(req: NextRequest) {
 
         const stream = await client.chat.completions.create({
             model: "c1/anthropic/claude-sonnet-4/v-20251230",
-            messages: messages as any, // Type assertion for compatibility
+            messages: [
+                {
+                    role: "system",
+                    content: systemMessage,
+                },
+                prompt, // Assuming prompt is the user message object {role, content}
+            ],
             stream: true,
         });
 
