@@ -55,7 +55,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedProfile = localStorage.getItem("royal_pilot_profile");
+    const storedProfile = localStorage.getItem("izaas_profile");
     if (storedProfile) {
       setUserData(JSON.parse(storedProfile));
       setDashboardReady(true);
@@ -64,7 +64,7 @@ export default function Home() {
   }, []);
 
   const handleOnboardingComplete = (data: any) => {
-    localStorage.setItem("royal_pilot_profile", JSON.stringify(data));
+    localStorage.setItem("izaas_profile", JSON.stringify(data));
     setUserData(data);
     setDashboardReady(true);
   };

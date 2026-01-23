@@ -25,7 +25,7 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem("royal_pilot_profile");
+        localStorage.removeItem("izaas_profile");
         window.location.reload();
     };
 

@@ -35,7 +35,7 @@ export default function SplitwiseCallback() {
 
             // Store in localStorage
             localStorage.setItem('splitwise_context', JSON.stringify(data.expenses));
-            localStorage.setItem('royal_pilot_integrations', JSON.stringify({ splitwise: true }));
+            localStorage.setItem('izaas_integrations', JSON.stringify({ splitwise: true }));
 
             // Cleanup temp secret
             localStorage.removeItem('splitwise_temp_secret');

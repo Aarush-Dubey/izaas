@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "iZaas",
-  description: "AI-native financial co-pilot powered by Thesys SDK",
+  description: "AI-native iZaas co-pilot powered by Thesys SDK",
 };
 
 export default function RootLayout({

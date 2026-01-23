@@ -40,7 +40,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     // Restore state and check integrations
     useEffect(() => {
         const savedState = localStorage.getItem('temp_onboarding_state');
-        const integrations = localStorage.getItem("royal_pilot_integrations");
+        const integrations = localStorage.getItem("izaas_integrations");
 
         if (savedState) {
             const parsed = JSON.parse(savedState);

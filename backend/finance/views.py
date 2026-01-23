@@ -141,14 +141,17 @@ class DocumentViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print(f"Middleware Error: {e}")
 
+from django.http import StreamingHttpResponse
+import time
+
 class ChatView(APIView):
     """
     Handles chat requests and injects vision model context.
+    Streams output in OpenAI-compatible format for C1Chat.
     """
     def post(self, request):
         prompt = request.data.get('prompt', '')
         # Simple Logic: Pass-through or integrate with LLM
-        # For now, we mock the LLM response but INJECT the vision data into the context log
         
         user_id = request.user.username if request.user.is_authenticated else "GUEST"
         base_dir = os.path.join(os.path.dirname(__file__), '../../data', user_id, 'uploads')
@@ -180,26 +183,70 @@ class ChatView(APIView):
         if file_path_context:
              context_parts.append(file_path_context)
         
+        # Inject Transaction Data Context
+        transactions_path = os.path.join(os.path.dirname(__file__), '../data', 'transactions.json')
+        if os.path.exists(transactions_path):
+            try:
+                with open(transactions_path, 'r') as f:
+                    txn_data = json.load(f)
+                    txn_str = json.dumps(txn_data, indent=2)
+                    context_parts.append(f"User Transaction Data:\n{txn_str}")
+            except Exception as e:
+                print(f"Error reading transaction file: {e}")
+
         if context_parts:
             full_prompt = "\n\n".join(context_parts) + f"\n\nUser Query: {prompt}"
         
-        # Call the Agent
-        try:
-           
+        # Generator for Streaming Response
+        def event_stream():
+            # 1. Start (Role)
+            chunk_id = f"chatcmpl-{int(time.time())}"
+            start_chunk = {
+                "id": chunk_id,
+                "object": "chat.completion.chunk",
+                "created": int(time.time()),
+                "model": "izaas-agent",
+                "choices": [{"index": 0, "delta": {"role": "assistant"}, "finish_reason": None}]
+            }
+            yield f"data: {json.dumps(start_chunk)}\n\n"
             
-            transactions_path = os.path.join(os.path.dirname(__file__), '../data', 'transactions.json')
-            agent = FinancialAnalystTool(json_path=transactions_path)
-            agent_response = agent.run(query=prompt, context=vision_context)
+            # 2. Run Agent (This blocks, but that's okay for now)
+            try:
+                # We pass empty context to agent.run to avoid duplication since we manually built full_prompt.
+                agent = FinancialAnalystTool(json_path=transactions_path)
+                agent_response = agent.run(query=full_prompt, context="")
+            except Exception as e:
+                agent_response = f"I encountered an error analyzing the data: {str(e)}"
+
+            # 3. Stream Content
+            # For better UX, we could split by words, but for now sending full block or splitting by newlines
+            import re
+            tokens = re.split(r'(\s+)', agent_response) # Split interacting with spaces
             
-            return Response({
-                "response": agent_response,
-                "context_used": bool(vision_context)
-            })
-        except Exception as e:
-             return Response({
-                "response": f"Agent Encountered Error: {str(e)}",
-                "context_used": bool(vision_context)
-            })
+            for token in tokens:
+                chunk = {
+                    "id": chunk_id,
+                    "object": "chat.completion.chunk",
+                    "created": int(time.time()),
+                    "model": "izaas-agent",
+                    "choices": [{"index": 0, "delta": {"content": token}, "finish_reason": None}]
+                }
+                yield f"data: {json.dumps(chunk)}\n\n"
+                # Small delay to simulate typing if running locally/fast
+                # time.sleep(0.01) 
+
+            # 4. Stop
+            end_chunk = {
+                "id": chunk_id,
+                "object": "chat.completion.chunk",
+                "created": int(time.time()),
+                "model": "izaas-agent",
+                "choices": [{"index": 0, "delta": {}, "finish_reason": "stop"}]
+            }
+            yield f"data: {json.dumps(end_chunk)}\n\n"
+            yield "data: [DONE]\n\n"
+
+        return StreamingHttpResponse(event_stream(), content_type='text/event-stream')
 
 class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
     """
