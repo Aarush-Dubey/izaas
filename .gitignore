@@ -78,3 +78,6 @@ frontend/next-env.d.ts
 
 
 middleware/.env
+middleware/*.json
+temp/
+images/

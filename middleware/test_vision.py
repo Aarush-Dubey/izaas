@@ -2,6 +2,8 @@ import os
 import io
 from PIL import Image, ImageDraw
 from vision_model import VisionModel
+from dotenv import load_dotenv
+load_dotenv()
 
 def create_dummy_image(path):
     # Create a simple image with some text
