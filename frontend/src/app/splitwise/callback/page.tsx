@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { SplitwiseService } from '@/services/splitwise';
 
-export default function SplitwiseCallback() {
+function CallbackContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [status, setStatus] = useState('Verifying...');
@@ -56,5 +56,17 @@ export default function SplitwiseCallback() {
             <h1 style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', marginBottom: '1rem' }}>SPLITWISE SYNC</h1>
             <p style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>{status}</p>
         </div>
+    );
+}
+
+export default function SplitwiseCallback() {
+    return (
+        <Suspense fallback={
+            <div className="stealth-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', color: '#fff' }}>
+                <p style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>Loading...</p>
+            </div>
+        }>
+            <CallbackContent />
+        </Suspense>
     );
 }
