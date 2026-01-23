@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { C1Chat, ThemeProvider } from "@thesysai/genui-sdk";
 import Onboarding from "@/components/Onboarding";

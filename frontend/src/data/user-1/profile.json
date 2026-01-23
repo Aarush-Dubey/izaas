@@ -1,0 +1,13 @@
+{
+    "user_id": "AGT-8842",
+    "name": "Aryan Sharma",
+    "designation": "Sr. Product Designer",
+    "location": "Indiranagar, Bangalore",
+    "financial_status": {
+        "monthly_inflow": "₹1,85,000",
+        "current_balance": "₹12,450",
+        "credit_card_due": "₹1,42,000",
+        "liquidity_score": 12,
+        "runway": "3 Days"
+    }
+}

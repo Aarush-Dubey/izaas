@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "analyzed_at": "2024-05-21T10:00:00",
+    "analyzer_version": "v2.1.0"
+  },
+  "scores": {
+    "financial_health_score": 30,
+    "survival_probability": "30%",
+    "burn_rate_percentage": "112.5%"
+  },
+  "leakage_vectors": [
+    {
+      "category": "Food",
+      "total_drain": "₹8,450.00",
+      "percentage": "45.2%"
+    },
+    {
+      "category": "Transport",
+      "total_drain": "₹3,200.00",
+      "percentage": "17.1%"
+    }
+  ],
+  "vampire_index": {
+    "detected_subs": 2,
+    "total_recurring_cost": "₹1,450.00",
+    "items": [
+      { "name": "Netflix", "cost": 649.0 },
+      { "name": "Spotify", "cost": 199.0 }
+    ]
+  },
+  "strategic_advice": [
+    "Dining spend is high (₹8,450). Cut dining by 50% to save runway.",
+    "CRITICAL: Immediate liquidity injection required."
+  ]
+}
