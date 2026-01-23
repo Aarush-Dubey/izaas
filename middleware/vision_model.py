@@ -3,9 +3,11 @@ import json
 import base64
 import groq
 import fitz  # PyMuPDF
+from dotenv import load_dotenv
+load_dotenv()
 
 class VisionModel:
-    def __init__(self, api_key=None, model_name="llama-3.2-11b-vision-preview"):
+    def __init__(self, api_key=None, model_name="meta-llama/llama-4-scout-17b-16e-instruct"):
         """
         Initialize the VisionModel with Groq client.
         

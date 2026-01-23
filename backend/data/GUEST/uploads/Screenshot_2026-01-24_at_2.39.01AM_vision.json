@@ -1,0 +1,10 @@
+{
+    "file_path": "/Users/aarush-dubey/Desktop/slides/izaas/backend/documents/Screenshot_2026-01-24_at_2.39.01AM.png",
+    "type": "image",
+    "analysis": [
+        {
+            "page": 1,
+            "content": "The image presents a technical overview of an engine designed to make sense of chaos, likely in the context of data processing or financial analysis. The visual content is organized into three main sections: \"Gathering the Truth,\" \"The Logic Layer,\" and \"The Output.\" Each section contains several key points that are summarized below:\n\n* **Gathering the Truth**\n\t+ Bank Feeds (AA Sandbox): The single source of truth for outflows.\n\t+ SplitWiz API (Live): Real-time fetch of owed debts and social groups.\n\n* **The Logic Layer**\n\t+ Financial Analyzer\n\t+ Leakage Detection: Groups micro-spends (e.g., \"$8k total on Coffee\")\n\t+ Vampire Hunter: Regex scans for recurring costs (Netflix, Spotify) to kill \"ghost\" subs.\n\n* **The Output**\n\t+ Generates a static summary.json\n\t+ RESULT: The app loads in 0ms. No loading spinners.\n\nThe image does not provide explicit statistics, but it implies that the engine is designed to process data from various sources, apply logical rules to analyze and transform the data, and generate a concise output. The use of terms like \"Bank Feeds,\" \"SplitWiz API,\" and \"Regex scans\" suggests a focus on financial data analysis and automation. Overall, the image presents a high-level overview of an engine's architecture and functionality, highlighting its ability to gather data, apply logic, and produce a streamlined output."
+        }
+    ]
+}

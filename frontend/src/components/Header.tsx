@@ -3,6 +3,7 @@
 import React from "react";
 import Sidebar from "./Sidebar";
 import ProfileDropdown from "./ProfileDropdown";
+import UploadButton from "./UploadButton";
 
 interface HeaderProps {
     onNewSession: () => void;
@@ -48,11 +49,11 @@ export default function Header({ onNewSession, onNavigate, user }: HeaderProps) 
                     userSelect: "none",
                     whiteSpace: "nowrap"
                 }}>
-                    ROYAL CO-PILOT
+                    iZaas
                 </h1>
             </div>
 
-            <div style={{ pointerEvents: "auto" }}>
+            <div style={{ pointerEvents: "auto", display: "flex", alignItems: "center", gap: "1rem" }}>
                 <ProfileDropdown user={user} />
             </div>
         </header>

@@ -281,16 +281,25 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                         </div>
 
                         {!splitwiseConnected ? (
-                            <button
-                                onClick={handleConnectSplitwise}
-                                className="btn-outline-stealth"
-                                style={{ width: '100%', borderColor: 'var(--border-stealth)', color: 'white' }}
-                            >
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                                    <Users size={14} />
-                                    ESTABLISH LINK
-                                </div>
-                            </button>
+                            <>
+                                <button
+                                    onClick={handleConnectSplitwise}
+                                    className="btn-outline-stealth"
+                                    style={{ width: '100%', borderColor: 'var(--border-stealth)', color: 'white' }}
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                                        <Users size={14} />
+                                        ESTABLISH LINK
+                                    </div>
+                                </button>
+                                <button
+                                    onClick={handleLaunch}
+                                    className="text-xs font-mono text-dim hover:text-white transition-colors mt-4 mx-auto block"
+                                    style={{ opacity: 0.6 }}
+                                >
+                                    [ BYPASS LINK ]
+                                </button>
+                            </>
                         ) : (
                             <div className="space-y-4">
                                 <div className="font-mono text-[10px] text-zinc-600 space-y-1">

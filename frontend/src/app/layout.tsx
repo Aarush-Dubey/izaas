@@ -3,7 +3,7 @@ import "@crayonai/react-ui/styles/index.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Finance Co-Pilot",
+  title: "iZaas",
   description: "AI-native financial co-pilot powered by Thesys SDK",
 };
 

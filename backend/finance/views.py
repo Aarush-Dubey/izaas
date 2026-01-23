@@ -6,11 +6,19 @@ from .models import User, Category, Transaction, Ledger, Document, SplitwiseLink
 from .serializers import UserSerializer, CategorySerializer, TransactionSerializer, LedgerSerializer, DocumentSerializer, SplitwiseLinkSerializer
 from .utils import extract_text_from_file
 from .splitwise_service import SplitwiseService
+from .splitwise_service import SplitwiseService
 import random
+import json
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
+
+import sys
+import os
+sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../../middleware')))
+from pipeline import FinancialPipeline
+from agent import FinancialAnalystTool
 
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
@@ -122,6 +130,76 @@ class DocumentViewSet(viewsets.ModelViewSet):
             instance.extracted_text = extracted
             instance.is_processed = True
             instance.save()
+            
+        # Trigger Middleware
+        try:
+            # Use request.user.username (call sign)
+            user_id = self.request.user.username if self.request.user.is_authenticated else "GUEST"
+            pipeline = FinancialPipeline(user_id=user_id)
+            if instance.file:
+                pipeline.handle_upload(instance.file.path)
+        except Exception as e:
+            print(f"Middleware Error: {e}")
+
+class ChatView(APIView):
+    """
+    Handles chat requests and injects vision model context.
+    """
+    def post(self, request):
+        prompt = request.data.get('prompt', '')
+        # Simple Logic: Pass-through or integrate with LLM
+        # For now, we mock the LLM response but INJECT the vision data into the context log
+        
+        user_id = request.user.username if request.user.is_authenticated else "GUEST"
+        base_dir = os.path.join(os.path.dirname(__file__), '../../data', user_id, 'uploads')
+        
+        vision_context = ""
+        file_path_context = ""
+        if os.path.exists(base_dir):
+            # Find latest vision json
+            json_files = [f for f in os.listdir(base_dir) if f.endswith('_vision.json')]
+            if json_files:
+                latest_json = max([os.path.join(base_dir, f) for f in json_files], key=os.path.getctime)
+                try:
+                    with open(latest_json, 'r') as f:
+                        data = json.load(f)
+                        vision_context = json.dumps(data.get("analysis", []), indent=2)
+                        # Also get the original file path if available in JSON or derive it
+                        original_file = data.get("file_path")
+                        if original_file:
+                             file_path_context = f"User uploaded a file available at: {original_file}"
+                        print(f"[*] Injected context from {os.path.basename(latest_json)}")
+                except Exception as e:
+                    print(f"Error reading vision file: {e}")
+
+        # Construct full prompt with context
+        full_prompt = prompt
+        context_parts = []
+        if vision_context:
+            context_parts.append(f"Context from uploaded document:\n{vision_context}")
+        if file_path_context:
+             context_parts.append(file_path_context)
+        
+        if context_parts:
+            full_prompt = "\n\n".join(context_parts) + f"\n\nUser Query: {prompt}"
+        
+        # Call the Agent
+        try:
+           
+            
+            transactions_path = os.path.join(os.path.dirname(__file__), '../data', 'transactions.json')
+            agent = FinancialAnalystTool(json_path=transactions_path)
+            agent_response = agent.run(query=prompt, context=vision_context)
+            
+            return Response({
+                "response": agent_response,
+                "context_used": bool(vision_context)
+            })
+        except Exception as e:
+             return Response({
+                "response": f"Agent Encountered Error: {str(e)}",
+                "context_used": bool(vision_context)
+            })
 
 class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
     """

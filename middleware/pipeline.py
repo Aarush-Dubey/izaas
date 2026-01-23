@@ -171,6 +171,39 @@ class FinancialPipeline:
         if not os.path.exists(self.base_dir):
             os.makedirs(self.base_dir)
 
+    def create_profile(self, user_data=None):
+        """
+        Creates or updates the user profile.
+        """
+        if not user_data:
+            print(f"[*] Generating random profile for {self.user_id}...")
+            user_data = self.generator.generate_profile(self.user_id)
+        
+        self._save(user_data, "raw_profile.json")
+        print(f"[+] Profile saved for {self.user_id}")
+        return user_data
+
+    def handle_upload(self, file_path):
+        """
+        Processes an uploaded file using the vision model and saves the analysis.
+        """
+        print(f"DEBUG: handle_upload called with {file_path}")
+        uploads_dir = os.path.join(self.base_dir, "uploads")
+        if not os.path.exists(uploads_dir):
+            os.makedirs(uploads_dir)
+            
+        filename = os.path.basename(file_path)
+        output_json_name = f"{os.path.splitext(filename)[0]}_vision.json"
+        output_path = os.path.join(uploads_dir, output_json_name)
+        
+        print(f"[*] Processing upload: {file_path}")
+        try:
+            self.vision.process_file(file_path, output_path)
+            print(f"DEBUG: process_file completed. Output at {output_path}")
+        except Exception as e:
+            print(f"DEBUG: Error in process_file: {e}")
+        return output_path
+
     def run_pipeline(self, scenario="CRITICAL"):
         print(f"\n--- 🚀 STARTING PIPELINE: {self.user_id} [{scenario}] ---")
         

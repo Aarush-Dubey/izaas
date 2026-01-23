@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { C1Chat, ThemeProvider } from "@thesysai/genui-sdk";
 import Onboarding from "@/components/Onboarding";
 import Header from "@/components/Header";
+import UploadButton from "@/components/UploadButton";
 
 const stealthTheme = {
   // ColorTheme
@@ -89,35 +90,46 @@ export default function Home() {
             via a hidden prompt mechanism if we had one, but standard C1Chat is simple. 
             We will start a fresh chat.
         */}
-      <div style={{ width: '100%', height: '100%', position: 'relative', zIndex: 10 }}>
+      <div style={{ width: '100%', height: '100%', position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column' }}>
         <Header
           onNewSession={() => window.location.reload()}
           onNavigate={(view: string) => console.log("Navigate to", view)}
           user={userData}
         />
-        <ThemeProvider theme={stealthTheme as any}>
-          <C1Chat
-            apiUrl="/api/chat"
-            agentName="Finance Co-Pilot"
-            formFactor="full-page"
-            processMessage={async ({ messages, threadId, responseId }) => {
-              const lastMessage = messages[messages.length - 1];
-              const context = localStorage.getItem('splitwise_context');
+        <div style={{ position: 'relative', flex: 1, minHeight: 0 }}>
+          <ThemeProvider theme={stealthTheme as any}>
+            <C1Chat
+              apiUrl="/api/chat"
+              agentName="iZaas"
+              formFactor="full-page"
+              processMessage={async ({ messages, threadId, responseId }) => {
+                const lastMessage = messages[messages.length - 1];
+                const context = localStorage.getItem('splitwise_context');
 
-              const res = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  prompt: lastMessage,
-                  threadId,
-                  responseId,
-                  context: context || undefined
-                })
-              });
-              return res;
-            }}
-          />
-        </ThemeProvider>
+                const res = await fetch('/api/chat', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    prompt: lastMessage,
+                    threadId,
+                    responseId,
+                    context: context || undefined
+                  })
+                });
+                return res;
+              }}
+            />
+          </ThemeProvider>
+          {/* Upload Button overlaid near the input area */}
+          <div style={{
+            position: 'absolute',
+            bottom: '26px',
+            left: '20px',
+            zIndex: 9999
+          }}>
+            <UploadButton />
+          </div>
+        </div>
       </div>
     </div>
   );
