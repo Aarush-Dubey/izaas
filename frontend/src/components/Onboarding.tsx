@@ -31,11 +31,31 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     useEffect(() => {
         if (phase === "BOOT") {
             const timer = setTimeout(() => {
-                setPhase("TREASURY");
+                setPhase(current => current === "BOOT" ? "TREASURY" : current);
             }, 2500);
             return () => clearTimeout(timer);
         }
     }, [phase]);
+
+    // Restore state and check integrations
+    useEffect(() => {
+        const savedState = localStorage.getItem('temp_onboarding_state');
+        const integrations = localStorage.getItem("royal_pilot_integrations");
+
+        if (savedState) {
+            const parsed = JSON.parse(savedState);
+            setPhone(parsed.phone || "");
+            setProfile(parsed.profile || { name: "", upi: "@okhdfc", rentDate: 1, household: "SOLO" });
+            if (parsed.phase) setPhase(parsed.phase);
+        }
+
+        if (integrations) {
+            const parsed = JSON.parse(integrations);
+            if (parsed.splitwise) {
+                setSplitwiseConnected(true);
+            }
+        }
+    }, []);
 
 
     // --- PHASE 1: TREASURY LINK ---
@@ -71,11 +91,28 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     };
 
     // --- PHASE 3: NETWORK BRIDGE ---
-    const handleConnectSplitwise = () => {
-        setSplitwiseConnected(true);
+    const handleConnectSplitwise = async () => {
+        try {
+            // Save state before redirect
+            const stateToSave = {
+                phase: "NETWORK",
+                phone,
+                profile
+            };
+            localStorage.setItem('temp_onboarding_state', JSON.stringify(stateToSave));
+
+            const { SplitwiseService } = await import("@/services/splitwise");
+            const { url, oauth_token_secret } = await SplitwiseService.getAuthUrl();
+            localStorage.setItem('splitwise_temp_secret', oauth_token_secret);
+            window.location.href = url;
+        } catch (e) {
+            console.error("Sync failed", e);
+            alert("Failed to initiate Splitwise Sync");
+        }
     };
 
     const handleLaunch = () => {
+        localStorage.removeItem('temp_onboarding_state');
         onComplete({ ...profile, splitwiseConnected });
     };
 

@@ -20,7 +20,13 @@ Text is allowed only as labels inside UI components.
 
 export async function POST(req: NextRequest) {
     try {
-        const { prompt, threadId, responseId } = await req.json();
+        const { prompt, threadId, responseId, context } = await req.json();
+
+        // 1. Construct the System Prompt
+        let systemMessage = SYSTEM_PROMPT;
+        if (context) {
+            systemMessage += `\n\nHIDDEN CONTEXT (User's Splitwise Data):\n${context}\n\nUse this data to answer questions about expenses, balances, and history.`;
+        }
 
         const client = new OpenAI({
             apiKey: process.env.THESYS_API_KEY,
@@ -32,9 +38,9 @@ export async function POST(req: NextRequest) {
             messages: [
                 {
                     role: "system",
-                    content: SYSTEM_PROMPT,
+                    content: systemMessage,
                 },
-                prompt,
+                prompt, // Assuming prompt is the user message object {role, content}
             ],
             stream: true,
         });

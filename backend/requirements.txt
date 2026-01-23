@@ -1,0 +1,9 @@
+django>=4.2,<5.0
+djangorestframework
+django-cors-headers
+django-allauth
+dj-rest-auth[with_social]
+python-dotenv
+requests
+Pillow
+psycopg2-binary  # Assuming Postgres might be used later, but good standard. Or just stick to sqlite for now if no DB specified. User said 'run backend', didn't specify DB. 'db.sqlite3' exists. I'll omit psycopg2 for now to keep image small/fast if they use sqlite.

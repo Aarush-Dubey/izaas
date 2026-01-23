@@ -101,6 +101,22 @@ export default function Home() {
             apiUrl="/api/chat"
             agentName="Finance Co-Pilot"
             formFactor="full-page"
+            processMessage={async ({ messages, threadId, responseId }) => {
+              const lastMessage = messages[messages.length - 1];
+              const context = localStorage.getItem('splitwise_context');
+
+              const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  prompt: lastMessage,
+                  threadId,
+                  responseId,
+                  context: context || undefined
+                })
+              });
+              return res;
+            }}
           />
         </ThemeProvider>
       </div>

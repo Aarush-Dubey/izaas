@@ -1,0 +1,13 @@
+{
+  "error": "Failed to get request token",
+  "details": "Invalid OAuth Request",
+  "debug_info": {
+    "url": "https://secure.splitwise.com/api/v3.0/get_request_token",
+    "method": "POST",
+    "auth_header": {
+      "Authorization": "OAuth oauth_callback=\"http%3A%2F%2Flocalhost%3A3000%2Fsplitwise%2Fcallback\", oauth_consumer_key=\"fyJeaC7LeulWBsWaf0PrF6COdhl1PtUFBfq36oXv\", oauth_nonce=\"dAyhmFj5NwOU3yPkAiqi5E1RYQSMXJ4V\", oauth_signature=\"V6FuJz1ODzqnBwW9QRNXlTCD4Yo%3D\", oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"1769200778\", oauth_version=\"1.0\""
+    },
+    "body_param": "(none)",
+    "secret_check": "cXLRs"
+  }
+}

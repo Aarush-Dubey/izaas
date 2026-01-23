@@ -189,12 +189,24 @@ export default function Sidebar({ onNewSession, onNavigate }: SidebarProps) {
                         </button>
 
                         <button
+                            onClick={async () => {
+                                try {
+                                    const { SplitwiseService } = await import("@/services/splitwise");
+                                    const { url, oauth_token_secret } = await SplitwiseService.getAuthUrl();
+                                    // Store secret provided by our backend for the callback step
+                                    localStorage.setItem('splitwise_temp_secret', oauth_token_secret);
+                                    window.location.href = url;
+                                } catch (e) {
+                                    console.error("Sync failed", e);
+                                    alert("Failed to initiate Splitwise Sync");
+                                }
+                            }}
                             style={{ ...buttonStyle, borderRadius: "var(--radius-md)" }}
                             onMouseEnter={(e) => { e.currentTarget.style.color = "white"; e.currentTarget.style.background = "var(--bg-panel-stealth)"; }}
                             onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.background = "transparent"; }}
                         >
                             <LinkIcon size={16} />
-                            <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.875rem" }}>Integrations</span>
+                            <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.875rem" }}>Sync Splitwise</span>
                         </button>
                     </div>
 
