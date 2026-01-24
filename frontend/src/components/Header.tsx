@@ -48,7 +48,7 @@ export default function Header({ onNewSession, onNavigate, user }: HeaderProps) 
                     userSelect: "none",
                     whiteSpace: "nowrap"
                 }}>
-                    ROYAL CO-PILOT
+                    Izaas
                 </h1>
             </div>
 

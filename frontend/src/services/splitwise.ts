@@ -16,7 +16,7 @@ export const SplitwiseService = {
     },
 
     async getExpenses(access_token: string, access_token_secret: string) {
-        const params = new URLSearchParams({ access_token, access_token_secret, limit: '100' });
+        const params = new URLSearchParams({ access_token, access_token_secret, limit: '1000' });
         const res = await fetch(`/api/splitwise/expenses?${params.toString()}`);
         if (!res.ok) throw new Error('Failed to fetch expenses');
         return res.json(); // { expenses: [...] }

@@ -212,7 +212,7 @@ export default function Sidebar({ onNewSession, onNavigate }: SidebarProps) {
 
                     {/* FOOTER */}
                     <div style={{ padding: "1rem", textAlign: "center" }}>
-                        <span style={{ fontSize: "10px", fontFamily: "var(--font-mono)", color: "var(--text-dim)" }}>v1.0.4 // ROYAL_OS</span>
+                        <span style={{ fontSize: "10px", fontFamily: "var(--font-mono)", color: "var(--text-dim)" }}>v1.0.4 // Izaas</span>
                     </div>
 
                 </div>
