@@ -5,7 +5,7 @@ export async function GET() {
     console.log("Splitwise Auth Start. Keys present:", !!process.env.SPLITWISE_CONSUMER_KEY, !!process.env.SPLITWISE_CONSUMER_SECRET);
 
     // We add oauth_callback to data so it is signed.
-    const callback_url = 'http://localhost:3000/splitwise/callback';
+    const callback_url = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/splitwise/callback`;
 
     const request_data = {
         url: `${SPLITWISE_API_BASE}/get_request_token`,
