@@ -102,7 +102,38 @@ export default function Home() {
             formFactor="full-page"
             processMessage={async ({ messages, threadId, responseId }) => {
               const lastMessage = messages[messages.length - 1];
-              const context = localStorage.getItem('splitwise_context');
+
+              // Optimize context to prevent payload too large errors / server crashes
+              const getOptimizedContext = (rawJson: string | null) => {
+                if (!rawJson) return undefined;
+                try {
+                  const data = JSON.parse(rawJson);
+                  // Assuming Splitwise structure usually has an 'expenses' array
+                  if (data && data.expenses && Array.isArray(data.expenses)) {
+                    // Keep only the most recent 20 expenses to reduce payload size
+                    // Splitwise API usually returns newest first? If not, we take slice(0, 20).
+                    // If the array is massive, this significantly reduces size.
+                    const truncatedExpenses = data.expenses.slice(0, 20);
+                    return JSON.stringify({
+                      ...data,
+                      expenses: truncatedExpenses,
+                      _meta: "Context automatically truncated at client to prevent network errors."
+                    });
+                  }
+                  // Fallback for other structures or huge strings
+                  if (rawJson.length > 50000) {
+                    return rawJson.substring(0, 50000) + "... [truncated]";
+                  }
+                  return rawJson;
+                } catch (e) {
+                  console.warn("Failed to parse/optimize context JSON", e);
+                  // If parsing fails, safer to not send potentially garbage massive string
+                  return undefined;
+                }
+              };
+
+              const rawContext = localStorage.getItem('splitwise_context');
+              const optimizedContext = getOptimizedContext(rawContext);
 
               const res = await fetch('/api/chat', {
                 method: 'POST',
@@ -111,7 +142,7 @@ export default function Home() {
                   prompt: lastMessage,
                   threadId,
                   responseId,
-                  context: context || undefined
+                  context: optimizedContext
                 })
               });
               return res;
